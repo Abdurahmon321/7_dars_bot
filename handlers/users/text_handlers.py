@@ -2,7 +2,7 @@ import os.path
 
 from data.loader import bot, db
 from telebot.types import Message, ReplyKeyboardRemove
-from keyboards.default import phone_button, tillar, main_menu, cities, menu
+from keyboards.default import phone_button, tillar, main_menu, cities, menu, registr
 from googletrans import Translator
 translater = Translator()
 USER_DATA = {}
@@ -31,7 +31,8 @@ def get_name(message: Message):
         msg = bot.send_message(chat_id, "Telefon raqamini yuborish buttonini bosing", reply_markup=phone_button())
         bot.register_next_step_handler(msg, get_phone)
     else:
-        registration()
+        bot.send_message(chat_id, "NImadur hato bo'ldi boshidan royxatdan o'ting", reply_markup=registr())
+        bot.register_next_step_handler(message, registration)
 
 
 def get_phone(message: Message):
@@ -49,31 +50,50 @@ def get_phone(message: Message):
         db.update_from_telegram_id(telegram_id=from_user_id, full_name=full_name, phone_number=phone_number)
         bot.send_message(chat_id, "Ro'yxatdan o'tdingiz!", reply_markup=ReplyKeyboardRemove())
     else:
-        registration()
+        bot.send_message(chat_id, "NImadur hato bo'ldi", reply_markup=phone_button())
+        bot.register_next_step_handler(message, get_phone)
 
 
 @bot.message_handler(func=lambda message: message.text == "Translate")
 def translate(message: Message):
     bot.send_message(message.chat.id, "Tilni tanlang", reply_markup=tillar())
 
+LANG = {}
+
 
 @bot.message_handler(func=lambda message: str(message.text).startswith("Detect language") and "-" in message.text)
 def tranlate_uz_ru(message: Message):
     lan = message.text.split("-")
     chat_id = message.chat.id
-    bot.send_message(chat_id, "Text kiriting: ")
+    from_user_id = message.from_user.id
+    LANG[from_user_id] = {}
+    print(LANG)
+    LANG[from_user_id]["to_lang"] = str(lan[1][:2])
+    msg = bot.send_message(chat_id, "Text kiriting: ")
+    bot.register_next_step_handler(msg, tralate_text)
 
-    @bot.message_handler(content_types=["text"])
-    def tralate_text(message: Message,):
-        chat_id = message.chat.id
-        text = message.text
-        tr_text = translater.translate(text, dest=lan[1][:2].lower()).text
-        bot.send_message(chat_id, f"{lan[0]} \n{text}\n\n {lan[1].title()}\n {tr_text}", reply_markup=main_menu())
+# @bot.message_handler(content_types=["text"])
+def tralate_text(message: Message,):
+    chat_id = message.chat.id
+    text = message.text
+
+    if message.text == "Menu":
+        print('Menu')
+    elif message.text == 'Tillarga qaytish':
+        print('Tillarga qaytish')
+    else:
+        from_user_id = message.from_user.id
+        lang = LANG[from_user_id]['to_lang']
+
+        tr_text = translater.translate(text, dest=LANG[from_user_id4]["to_lang"].lower()).text
+        msg = bot.send_message(chat_id, f"{'en'} \n{text}\n\n {str(LANG[from_user_id]["to_lang"])}\n {tr_text}", reply_markup=main_menu())
+        bot.register_next_step_handler(msg, tralate_text)
 
 
 @bot.message_handler(func=lambda message: message.text == "Tillarga qaytish")
 def tillarga_qaytish(message: Message):
     bot.send_message(message.chat.id, "Tilni tanlang: ", reply_markup=tillar())
+    bot.register_next_step_handler(message, tranlate_uz_ru)
 
 
 @bot.message_handler(func=lambda message: message.text == "Menu")

@@ -1,5 +1,5 @@
 from data.loader import bot, db
-from telebot.types import Message, ReplyKeyboardRemove
+from telebot.types import Message
 from keyboards.default import registr, menu
 from googletrans import Translator
 tranlater = Translator()
@@ -21,5 +21,3 @@ def start(message: Message):
         # bot.send_message(chat_id, "Siz ro'yxatdan o'tib bo'lgansz", reply_markup=ReplyKeyboardRemove())
 
     bot.send_message(chat_id, text, reply_markup=markup)
-
-
