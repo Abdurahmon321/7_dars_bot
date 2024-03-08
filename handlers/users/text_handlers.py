@@ -7,9 +7,10 @@ from googletrans import Translator
 translater = Translator()
 USER_DATA = {}
 
-cities2 = ["Toshkent", "Andijon", "Buxoro", "Guliston", "Jizzax", "Navoiy", "Namangan", "Nukus", "Samarqand"
-          "Termiz", "Urganch", "Farg'ona", "Qarshi", "Marg'ilon", "Xiva", "Qo'qon", "Angren", "Bekobod",
-          "Denov", "Zomin", "Zarafshon", "Nurota", "Pop", "Urgut", "Chust", "Shaxrihon", "Qorako'l"]
+cities2 = ["Toshkent", "Andijon", "Buxoro", "Guliston", "Jizzax", "Navoiy", "Namangan", "Nukus", "Samarqand",
+           "Termiz", "Urganch", "Farg'ona", "Qarshi", "Marg'ilon", "Xiva", "Qo'qon", "Angren", "Bekobod",
+           "Denov", "Zomin", "Zarafshon", "Nurota", "Pop", "Urgut", "Chust", "Shaxrihon", "Qorako'l"]
+
 
 @bot.message_handler(func=lambda message: message.text == "Ro'yxatdan o'tish uchun bosing!")
 def registration(message: Message):
@@ -59,7 +60,6 @@ def translate(message: Message):
 @bot.message_handler(func=lambda message: str(message.text).startswith("Detect language") and "-" in message.text)
 def tranlate_uz_ru(message: Message):
     lan = message.text.split("-")
-    print(lan[1][:2])
     chat_id = message.chat.id
     bot.send_message(chat_id, "Text kiriting: ")
 
@@ -79,11 +79,6 @@ def tillarga_qaytish(message: Message):
 @bot.message_handler(func=lambda message: message.text == "Menu")
 def menu2(message: Message):
     bot.send_message(message.chat.id, "Bosh menuga qaytildi", reply_markup=menu())
-
-
-@bot.message_handler(func=lambda message: message.text == "Tillarga qaytish")
-def tillar_menusi(message: Message):
-    bot.send_message(message.chat.id, "Tilni tanlang", reply_markup=tillar())
 
 
 @bot.message_handler(func=lambda message: message.text == "Ro'za taqvimi")
