@@ -42,15 +42,19 @@ def get_phone(message: Message):
 
     if message.contact:
         phone_number = message.contact.phone_number
+        phone_number = "+" + phone_number
+        print("1-if ishladi")
     else:
         phone_number = message.text
+        print("1-else ishladi")
 
     if len(phone_number) == 13 and phone_number[1::].isdigit():
+        print("ishlaadi")
         USER_DATA[from_user_id]["phone_number"] = phone_number
         db.update_from_telegram_id(telegram_id=from_user_id, full_name=full_name, phone_number=phone_number)
         bot.send_message(chat_id, "Ro'yxatdan o'tdingiz!", reply_markup=ReplyKeyboardRemove())
     else:
-        bot.send_message(chat_id, "NImadur hato bo'ldi", reply_markup=phone_button())
+        bot.send_message(chat_id, "Nimadur hato bo'ldi", reply_markup=phone_button())
         bot.register_next_step_handler(message, get_phone)
 
 
@@ -67,7 +71,7 @@ def tranlate_uz_ru(message: Message):
     chat_id = message.chat.id
     from_user_id = message.from_user.id
     LANG[from_user_id] = {}
-    print(LANG)
+    LANG[from_user_id]["from_lang"] = str(lan[0])
     LANG[from_user_id]["to_lang"] = str(lan[1][:2])
     msg = bot.send_message(chat_id, "Text kiriting: ")
     bot.register_next_step_handler(msg, tralate_text)
@@ -78,15 +82,17 @@ def tralate_text(message: Message,):
     text = message.text
 
     if message.text == "Menu":
-        print('Menu')
+        menu2(message)
+        print("Menu")
     elif message.text == 'Tillarga qaytish':
-        print('Tillarga qaytish')
+        tillarga_qaytish(message)
+        print("tillarga qaytish")
     else:
         from_user_id = message.from_user.id
         lang = LANG[from_user_id]['to_lang']
 
-        tr_text = translater.translate(text, dest=LANG[from_user_id4]["to_lang"].lower()).text
-        msg = bot.send_message(chat_id, f"{'en'} \n{text}\n\n {str(LANG[from_user_id]["to_lang"])}\n {tr_text}", reply_markup=main_menu())
+        tr_text = translater.translate(text, dest=LANG[from_user_id]["to_lang"].lower()).text
+        msg = bot.send_message(chat_id, f"{LANG[from_user_id]["from_lang"]} \n{text}\n\n {str(LANG[from_user_id]["to_lang"])}\n {tr_text}", reply_markup=main_menu())
         bot.register_next_step_handler(msg, tralate_text)
 
 
