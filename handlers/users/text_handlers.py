@@ -83,10 +83,8 @@ def tralate_text(message: Message,):
 
     if message.text == "Menu":
         menu2(message)
-        print("Menu")
     elif message.text == 'Tillarga qaytish':
         tillarga_qaytish(message)
-        print("tillarga qaytish")
     else:
         from_user_id = message.from_user.id
         lang = LANG[from_user_id]['to_lang']
@@ -109,13 +107,25 @@ def menu2(message: Message):
 
 @bot.message_handler(func=lambda message: message.text == "Ro'za taqvimi")
 def taqvim(message: Message):
-    if message.text == "Menu":
-        bot.send_message(message.chat.id, "Bosh menuga qaytildi", reply_markup=menu())
     bot.send_message(message.chat.id, "Shaxarni tanlang", reply_markup=cities())
     bot.register_next_step_handler(message, send_photo)
 
 
 def send_photo(message: Message):
+    text1 = "نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرَ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ، خَالِصًا لِلهِ تَعَالَى أَللهُ أَكْبَرُ"
+    text2 = "اَللَّهُمَّ لَكَ صُمْتُ وَ بِكَ آمَنْتُ وَ عَلَيْكَ تَوَكَّلْتُ وَ عَلَى رِزْقِكَ أَفْتَرْتُ، فَغْفِرْلِى مَا قَدَّمْتُ وَ مَا أَخَّرْتُ بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ"
+    full_text = (f"*Ro‘za tutish (saharlik, og‘iz yopish) duosi*\n\n{text1}\n\n"
+                 f"Navaytu an asuvma sovma shahri ramazona minal fajri ilal mag‘ribi, xolisan lillahi ta’aalaa"
+                 f" Allohu akbar.\n\n"
+                 f"Ma’nosi: Ramazon oyining ro‘zasini subhdan to kun botguncha tutmoqni niyat qildim. "
+                 f"Xolis Alloh uchun Alloh buyukdir.\n\n"
+                 f"*Iftorlik (og‘iz ochish) duosi*\n\n{text2}\n\n"
+                 f"Allohumma laka sumtu va bika aamantu va a’layka tavakkaltu va a’laa rizqika aftartu, "
+                 f"fag‘firliy ma qoddamtu va maa axxortu birohmatika yaa arhamar roohimiyn.\n\n"
+                 f"Ma’nosi: Ey Alloh, ushbu Ro‘zamni Sen uchun tutdim va Senga iymon keltirdim va Senga tavakkal "
+                 f"qildim va bergan rizqing bilan iftor qildim. Ey mehribonlarning eng mehriboni, mening avvalgi va "
+                 f"keyingi gunohlarimni mag‘firat qilgil.\n\n"
+                 f"Manba: Muslim.uz")
     if message.text == "Menu":
         menu2(message)
     else:
@@ -123,4 +133,6 @@ def send_photo(message: Message):
         city_name = message.text
         file_path = os.path.join("shaharlar", f"{city_name.lower()}.png")
         photo = open(file_path, mode="rb")
-        bot.send_photo(chat_id, photo, caption=f"{city_name} shaxrining ro'za taqvimi")
+        bot.send_photo(chat_id, photo, caption=f"{city_name} shaxrining ro'za taqvimi", parse_mode="Markdown")
+        bot.send_message(chat_id, full_text, parse_mode="Markdown")
+        bot.register_next_step_handler(message, send_photo)
