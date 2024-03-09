@@ -41,10 +41,13 @@ def tillar():
 
 
 def menu():
-    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     btn1 = KeyboardButton("Ro'za taqvimi")
     btn2 = KeyboardButton("Translate")
-    markup.add(btn1, btn2)
+    btn3 = KeyboardButton("Instagram video downloader")
+    btn4 = KeyboardButton("Ob havo")
+    btn5 = KeyboardButton("qr-code")
+    markup.add(btn1, btn2, btn3, btn4,btn5)
     return markup
 
 
@@ -60,3 +63,38 @@ def cities():
         
     markup.add(KeyboardButton("Menu"))
     return markup
+
+
+def instagram_menu():
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = KeyboardButton("Menu")
+    markup.add(btn1)
+    return markup
+
+
+def ob_havo_menu():
+    markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    btn1 = KeyboardButton("Shaharlar bo'yicha")
+    btn2 = KeyboardButton("Joylashuv bo'yicha", request_location=True)
+    btn3 = KeyboardButton("Menu")
+    markup.add(btn1, btn2, btn3)
+    return markup
+
+
+def uz_citys():
+    markup3 = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    city1 = KeyboardButton("Fergana")
+    city2 = KeyboardButton("Namangan")
+    city3 = KeyboardButton("Andijon")
+    city4 = KeyboardButton("Toshkent")
+    city5 = KeyboardButton("Navoiy")
+    city6 = KeyboardButton("Jizzax")
+    city7 = KeyboardButton("Samarqand")
+    city8 = KeyboardButton("Xorazm")
+    city9 = KeyboardButton("Buxoro")
+    city10 = KeyboardButton("Qashqadaryo")
+    city11 = KeyboardButton("Sirdaryo")
+    city12 = KeyboardButton("Surxandaryo")
+    button3 = KeyboardButton("Menu")
+    markup3.add(city1, city11, city12, city10, city5, city6, city7, city8, city9, city2, city3, city4, button3)
+    return markup3

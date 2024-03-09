@@ -112,12 +112,15 @@ def taqvim(message: Message):
     if message.text == "Menu":
         bot.send_message(message.chat.id, "Bosh menuga qaytildi", reply_markup=menu())
     bot.send_message(message.chat.id, "Shaxarni tanlang", reply_markup=cities())
+    bot.register_next_step_handler(message, send_photo)
 
 
-@bot.message_handler(func=lambda message: message.text in cities2)
 def send_photo(message: Message):
-    chat_id = message.chat.id
-    city_name = message.text
-    file_path = os.path.join("shaharlar", f"{city_name.lower()}.png")
-    photo = open(file_path, mode="rb")
-    bot.send_photo(chat_id, photo, caption=f"{city_name} shaxrining ro'za taqvimi")
+    if message.text == "Menu":
+        menu2(message)
+    else:
+        chat_id = message.chat.id
+        city_name = message.text
+        file_path = os.path.join("shaharlar", f"{city_name.lower()}.png")
+        photo = open(file_path, mode="rb")
+        bot.send_photo(chat_id, photo, caption=f"{city_name} shaxrining ro'za taqvimi")
